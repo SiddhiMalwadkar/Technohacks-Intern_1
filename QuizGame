@@ -1,0 +1,112 @@
+package com.beans;
+
+import java.awt.BorderLayout;
+import java.awt.Desktop.Action;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+
+public class QuizGame extends JFrame implements ActionListener {
+	private JLabel labelquestion, labelfeedback, labelscore;
+	private JRadioButton radioButton1, radioButton2, radioButton3, radioButton4,radioButton5,radioButton6,radioButton7,radioButton8,radioButton9;
+	private JButton buttonsubmit,buttonnext;
+	private ButtonGroup buttongroup;
+	private JPanel panelquestion, panelfeedback,panelscore;
+	private String questions[]= {
+"Who invented Java Programming?",
+"Which component is used to compile, debug and execute the java programs?",
+"Which one of the following is not a Java feature?"
+};
+private String options[][]= {
+		{"a) Guido van Rossum","b) James Gosling","c) Dennis Ritchie","d) Bjarne Stroustrup"},
+		{"a) JRE","b) JIT","c) JDK","d) JVM"},
+		{"a) Object-oriented","b) Use of pointers","c) Portable","d) Dynamic and Extensible"},
+};
+private String correctanswers[]= {"James Gosling","JDK","Use of Pointers","keyword",".java","JAVA_HOME","Compilation","Compile time polymorphism",".class"};
+private int currentquestion=0, score=0;
+public QuizGame() {
+	setLayout(new BorderLayout());
+	panelquestion=new JPanel();
+	labelquestion=new JLabel(questions[currentquestion]);
+	panelquestion.add(labelquestion);
+	add(panelquestion,BorderLayout.NORTH);
+	panelfeedback=new JPanel();
+	buttongroup=new ButtonGroup();
+	radioButton1=new JRadioButton(options[currentquestion][0]);
+	radioButton2=new JRadioButton(options[currentquestion][1]);
+	radioButton3=new JRadioButton(options[currentquestion][2]);
+	radioButton4=new JRadioButton(options[currentquestion][3]);
+	buttongroup.add(radioButton1);
+	buttongroup.add(radioButton2);
+	buttongroup.add(radioButton3);
+	buttongroup.add(radioButton4);
+	panelfeedback.add(radioButton1);
+	panelfeedback.add(radioButton2);
+	panelfeedback.add(radioButton3);
+	panelfeedback.add(radioButton4);
+	
+	add(panelfeedback,BorderLayout.CENTER);
+	JPanel panelbuttons=new JPanel();
+	buttonsubmit=new JButton("Submit");
+	buttonnext=new JButton("Next");
+	buttonsubmit.addActionListener(this);
+	buttonnext.addActionListener(this);
+	buttonnext.setEnabled(false);
+	panelbuttons.add(buttonsubmit);
+	panelbuttons.add(buttonnext);
+	add(panelbuttons,BorderLayout.SOUTH);
+	panelscore=new JPanel();
+	labelscore=new JLabel("Score:"+score);
+	panelscore.add(labelscore);
+	add(panelscore,BorderLayout.EAST);
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	setSize(500,200);
+	setVisible(true);
+}
+public void actionPerformed(ActionEvent e) {
+	if(e.getSource()==buttonsubmit) {
+		buttonsubmit.setEnabled(false);
+		for(int i=0;i<buttongroup.getButtonCount();i++) {
+			if(buttongroup.getElements().nextElement().isSelected()) {
+				if(correctanswers[currentquestion].equals(options[currentquestion][i])) {
+					score++;
+					labelscore.setText("Score:"+score);
+				}
+				break;
+			}
+		}
+		buttonnext.setEnabled(true);
+	}else if(e.getSource() == buttonnext) {
+		 if (currentquestion < questions.length - 1) {
+		currentquestion++;
+		labelquestion.setText(questions[currentquestion]);
+		radioButton1.setText(options[currentquestion][0]);
+		radioButton2.setText(options[currentquestion][1]);
+		radioButton3.setText(options[currentquestion][2]);
+		radioButton4.setText(options[currentquestion][3]);
+		
+		radioButton1.setSelected(false);
+		radioButton2.setSelected(false);
+		radioButton3.setSelected(false);
+		radioButton4.setSelected(false);
+		
+		buttonsubmit.setEnabled(true);
+		buttonnext.setEnabled(false);
+	}else {
+		JOptionPane.showMessageDialog(this,"Quiz completed. Your final score is:"+score);
+		System.exit(0);
+	}
+	}
+}
+
+public static void main(String args[]) {
+	new QuizGame();
+}
+}
